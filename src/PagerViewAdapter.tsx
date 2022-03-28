@@ -39,8 +39,10 @@ export default function PagerViewAdapter<T extends Route>({
   onIndexChange,
   onSwipeStart,
   onSwipeEnd,
+  onPageScroll,
   children,
   style,
+  disabledAnimation,
   ...rest
 }: Props<T>) {
   const { index } = navigationState;
@@ -63,8 +65,9 @@ export default function PagerViewAdapter<T extends Route>({
       (route: { key: string }) => route.key === key
     );
 
-    pagerRef.current?.setPage(index);
-  }, []);
+    disabledAnimation ? pagerRef.current?.setPageWithoutAnimation(index) :
+      pagerRef.current?.setPage(index);
+  }, [disabledAnimation]);
 
   React.useEffect(() => {
     if (keyboardDismissMode === 'auto') {
@@ -72,6 +75,7 @@ export default function PagerViewAdapter<T extends Route>({
     }
 
     if (indexRef.current !== index) {
+      disabledAnimation ? pagerRef.current?.setPageWithoutAnimation(index) :
       pagerRef.current?.setPage(index);
     }
   }, [keyboardDismissMode, index]);
@@ -137,7 +141,12 @@ export default function PagerViewAdapter<T extends Route>({
               },
             },
           ],
-          { useNativeDriver: true }
+          {
+            useNativeDriver: true,
+            listener: (e: any) => {
+              onPageScroll?.(e?.nativeEvent);
+            }
+          }
         )}
         onPageSelected={(e) => {
           const index = e.nativeEvent.position;
