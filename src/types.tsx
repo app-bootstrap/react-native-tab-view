@@ -41,6 +41,11 @@ export type EventEmitterProps = {
   addEnterListener: (listener: Listener) => () => void;
 };
 
+export type PageScrollProps = {
+  offset: number;
+  position: number;
+}
+
 export type PagerProps = Omit<
   PagerViewProps,
   | 'initialPage'
@@ -53,6 +58,8 @@ export type PagerProps = Omit<
 > & {
   keyboardDismissMode?: 'none' | 'on-drag' | 'auto';
   swipeEnabled?: boolean;
+  disabledAnimation?: boolean;
   onSwipeStart?: () => void;
   onSwipeEnd?: () => void;
+  onPageScroll?: (e: PageScrollProps) => void;
 };

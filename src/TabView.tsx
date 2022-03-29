@@ -31,6 +31,7 @@ export type Props<T extends Route> = PagerProps & {
   lazyPreloadDistance?: number;
   sceneContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
+  disabledAnimation?: Boolean;
 };
 
 export default function TabView<T extends Route>({
@@ -43,12 +44,14 @@ export default function TabView<T extends Route>({
   lazyPreloadDistance = 0,
   onSwipeStart,
   onSwipeEnd,
+  onPageScroll,
   renderLazyPlaceholder = () => null,
   renderTabBar = (props) => <TabBar {...props} />,
   sceneContainerStyle,
   style,
   swipeEnabled = true,
   tabBarPosition = 'top',
+  disabledAnimation = false,
 }: Props<T>) {
   const [layout, setLayout] = React.useState({
     width: 0,
@@ -80,10 +83,12 @@ export default function TabView<T extends Route>({
         layout={layout}
         navigationState={navigationState}
         keyboardDismissMode={keyboardDismissMode}
+        disabledAnimation={disabledAnimation}
         swipeEnabled={swipeEnabled}
         onSwipeStart={onSwipeStart}
         onSwipeEnd={onSwipeEnd}
         onIndexChange={jumpToIndex}
+        onPageScroll={onPageScroll}
       >
         {({ position, render, addEnterListener, jumpTo }) => {
           // All of the props here must not change between re-renders
